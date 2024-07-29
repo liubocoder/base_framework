@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'drf_spectacular_sidecar',
 
     #本地应用
+    'app.api.demo',
 ]
 
 MIDDLEWARE = [
@@ -100,10 +101,10 @@ REST_FRAMEWORK = {
         #自定义token
     ],
 
-    # 限流
-    'DEFAULT_THROTTLE_CLASSES': (
-        'rest_framework.throttling.UserRateThrottle'
-    ),
+    # 限流 TODO 导致swagger异常
+    # 'DEFAULT_THROTTLE_CLASSES': (
+    #     'rest_framework.throttling.UserRateThrottle'
+    # ),
     'DEFAULT_THROTTLE_RATES': {
         # 限流策略
         'user': '60/min',
@@ -136,9 +137,7 @@ SPECTACULAR_SETTINGS = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
-
+# 使用auth的密码校验器，自定义的认证流程可以忽略AUTH_PASSWORD_VALIDATORS配置
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -167,7 +166,6 @@ USE_TZ = False
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 
 DATABASES = {
@@ -281,44 +279,87 @@ CELERY_BEAT_SCHEDULE = {
     # },
 }
 
-if DEBUG:
-    ##用于打印Django 调试信息，发布版本可以禁用
-    LOGGING = {
-        'version' : 1,
-        'disable_existing_loggers':False,
-        'handlers':{
-            'console':{
-                'level':'DEBUG',
-                'class':'logging.StreamHandler',
-            }
+# 发布版本这里需要调整
+LOGGING = {
+    'version' : 1,
+    'disable_existing_loggers':False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] [%(process)d:%(thread)d] '
+                      '%(message)s',
+            'style': '%',
         },
-        'loggers':{
-            'django.db.backends':{
-                'level':'DEBUG',
-                'handlers':['console'],
-                'propagate':False,
-            }
+        'default': {
+            'format': '%(asctime)s %(levelname)s %(message)s',
+        },
+    },
+    'handlers':{
+        'servers':{
+            'class': 'app.pkg.utils.log.handler.InterceptTimedRotatingFileHandler',
+            'filename': os.path.join(LOG_ROOT, 'webapi_log.log'),
+            'when': 'D',
+            'interval': 1,
+            'backup_count': 1,
+            'formatter': 'verbose',
+            'encoding': 'utf-8',
+            'level': 'DEBUG',
+        },
+        'fm':{
+            'class': 'app.pkg.utils.log.handler.InterceptTimedRotatingFileHandler',
+            'filename': os.path.join(LOG_ROOT, 'django.log'),
+            'when': 'D',
+            'interval': 1,
+            'backup_count': 1,
+            'formatter': 'verbose',
+            'encoding': 'utf-8',
+        },
+        'db':{
+            'class': 'app.pkg.utils.log.handler.InterceptTimedRotatingFileHandler',
+            'filename': os.path.join(LOG_ROOT, 'db_log.log'),
+            'when': 'D',
+            'interval': 1,
+            'backup_count': 1,
+            'formatter': 'verbose',
+            'encoding': 'utf-8',
+        },
+        'celery':{
+            'class': 'app.pkg.utils.log.handler.InterceptTimedRotatingFileHandler',
+            'filename': os.path.join(LOG_ROOT, 'celery_log.log'),
+            'when': 'D',
+            'interval': 1,
+            'backup_count': 1,
+            'formatter': 'verbose',
+            'encoding': 'utf-8',
+        },
+        'console':{
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers':{
+        'django': {
+            'level': 'WARNING',
+            'handlers': ['fm', 'console'],
+            'propagate': False,
+        },
+        'django.db.backends':{
+            'level':'DEBUG',
+            'handlers':['db', 'console'],
+            'propagate':False,
+        },
+        'django.request':{
+            'level':'INFO',
+            'handlers':['fm', 'console'],
+            'propagate':False,
+        },
+        'celery': {
+            'level':'DEBUG',
+            'handlers':['celery', 'console'],
+            'propagate':False,
         }
+    },
+    'root': {
+        'level':'INFO',
+        'handlers':['servers', 'console'],
     }
-
-
-#调试日志输出控制标志,DEBUG,INFO,WARNING,ERROR
-LOGGING_LEVEL = "DEBUG"
-#日志文件大小 限制，单位MByte，默认10MByte
-LOGGING_FILE_MAX_SIZE = 30
-#日志文件保存时长，单位天
-LOGGING_FILE_MAX_AGE = 7
-#日志文件
-LOGGING_FILE ='webapi_log'
-
-# 使用loguru日志库
-import loguru
-LOG_FORMAT="{time:YYYY-MM-DD HH:mm:ss:SSSS} {level} {module}.{function}:{line} {message}"
-loguru.logger.remove()
-#日志输出到stdout
-if DEBUG:
-    loguru.logger.add(sys.stderr, format=LOG_FORMAT,  level=LOGGING_LEVEL)
-#日志输出到文件
-loguru.logger.add(os.path.join(LOG_ROOT, "%s.log" % (LOGGING_FILE)),
-    format=LOG_FORMAT,  level=LOGGING_LEVEL, rotation="%s MB" % (LOGGING_FILE_MAX_SIZE),
-    retention="%s days" % (LOGGING_FILE_MAX_AGE))
+}
