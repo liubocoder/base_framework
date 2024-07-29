@@ -279,13 +279,19 @@ CELERY_BEAT_SCHEDULE = {
     # },
 }
 
-# 发布版本这里需要调整
+# 日志相关配置
+# 日志文件大小 限制，单位MB，默认50MB
+LOGGING_FILE_MAX_SIZE = 50
+# 日志文件保存时长，单位天
+LOGGING_FILE_MAX_AGE = 7
+LOG_FORMAT="{time:YYYY-MM-DD HH:mm:ss:SSS} | {level} | {module}:{function}:{line} {process}:{thread} {message}"
+# 以下日志等级可以调整
 LOGGING = {
     'version' : 1,
     'disable_existing_loggers':False,
     'formatters': {
         'verbose': {
-            'format': '%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] [%(process)d:%(thread)d] '
+            'format': '%(asctime)s %(levelname)s [%(module)s:%(funcName)s:%(lineno)d] [%(process)d:%(thread)d] '
                       '%(message)s',
             'style': '%',
         },
@@ -296,39 +302,8 @@ LOGGING = {
     'handlers':{
         'servers':{
             'class': 'app.pkg.utils.log.handler.InterceptTimedRotatingFileHandler',
+            #'class': 'logging.StreamHandler',
             'filename': os.path.join(LOG_ROOT, 'webapi_log.log'),
-            'when': 'D',
-            'interval': 1,
-            'backup_count': 1,
-            'formatter': 'verbose',
-            'encoding': 'utf-8',
-            'level': 'DEBUG',
-        },
-        'fm':{
-            'class': 'app.pkg.utils.log.handler.InterceptTimedRotatingFileHandler',
-            'filename': os.path.join(LOG_ROOT, 'django.log'),
-            'when': 'D',
-            'interval': 1,
-            'backup_count': 1,
-            'formatter': 'verbose',
-            'encoding': 'utf-8',
-        },
-        'db':{
-            'class': 'app.pkg.utils.log.handler.InterceptTimedRotatingFileHandler',
-            'filename': os.path.join(LOG_ROOT, 'db_log.log'),
-            'when': 'D',
-            'interval': 1,
-            'backup_count': 1,
-            'formatter': 'verbose',
-            'encoding': 'utf-8',
-        },
-        'celery':{
-            'class': 'app.pkg.utils.log.handler.InterceptTimedRotatingFileHandler',
-            'filename': os.path.join(LOG_ROOT, 'celery_log.log'),
-            'when': 'D',
-            'interval': 1,
-            'backup_count': 1,
-            'formatter': 'verbose',
             'encoding': 'utf-8',
         },
         'console':{
@@ -339,27 +314,27 @@ LOGGING = {
     'loggers':{
         'django': {
             'level': 'WARNING',
-            'handlers': ['fm', 'console'],
+            'handlers': ['servers', 'console'],
             'propagate': False,
         },
         'django.db.backends':{
             'level':'DEBUG',
-            'handlers':['db', 'console'],
+            'handlers':['servers', 'console'],
             'propagate':False,
         },
         'django.request':{
             'level':'INFO',
-            'handlers':['fm', 'console'],
+            'handlers':['servers', 'console'],
             'propagate':False,
         },
         'celery': {
             'level':'DEBUG',
-            'handlers':['celery', 'console'],
+            'handlers':['servers', 'console'],
             'propagate':False,
         }
     },
     'root': {
-        'level':'INFO',
+        'level':'DEBUG',
         'handlers':['servers', 'console'],
     }
 }
