@@ -16,6 +16,8 @@ from rest_framework.viewsets import ViewSet
 
 import logging
 
+from app.pkg.django.response import CommonResponseSerializer, CommonResponseContent, CommonResponseStatusCode
+
 
 class SomeWork1Set(ViewSet, viewsets.GenericViewSet, mixins.CreateModelMixin):
     permission_classes = []
@@ -26,10 +28,13 @@ class SomeWork1Set(ViewSet, viewsets.GenericViewSet, mixins.CreateModelMixin):
         tags=["示例-CRUD"],
         summary="功能类1【创建】",
         description="示例代码",
+        responses=CommonResponseSerializer,
     )
     def create(self, request, *args, **kwargs):
         logging.debug("demo create")
-        return Response({}, status.HTTP_200_OK)
+        ret = CommonResponseContent()
+        ret.code = CommonResponseStatusCode.SUCCESS
+        return Response(ret.to_dict(), status.HTTP_200_OK)
 
     @extend_schema(
         tags=["示例-Redis操作"],
@@ -43,5 +48,6 @@ class SomeWork1Set(ViewSet, viewsets.GenericViewSet, mixins.CreateModelMixin):
         rdConn.set(k1, "value1", ex=10)
         logging.debug(rdConn.ttl(k1))
         logging.debug(rdConn.get(k1))
-
-        return Response({}, status.HTTP_200_OK)
+        ret = CommonResponseContent()
+        ret.code = CommonResponseStatusCode.SUCCESS
+        return Response(ret.to_dict(), status.HTTP_200_OK)
