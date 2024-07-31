@@ -5,6 +5,10 @@
 """
 tasks.py 使用说明:
 
+调试的命令
+/usr/local/bin/celery -A app worker -Q data_sync -B -l debug
+/usr/local/bin/celery 为celery启动脚本
+
 """
 import time
 

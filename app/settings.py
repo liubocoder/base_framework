@@ -245,7 +245,8 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
+#启动celery6.0有个警告，如下配置可以屏蔽，网上有说不建议，比如配置更改的情况
+#CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 #任务队列的连接配置
 CELERY_BROKER_URL = f'{REDIS_URL}/{REDIS_DB_CELERY_BROKER}'
 CELERY_RESULT_BACKEND = f'{REDIS_URL}/{REDIS_DB_CELERY_RESULT}'
@@ -285,7 +286,6 @@ LOGGING_FILE_MAX_AGE = 30
 LOG_FORMAT="{time:YYYY-MM-DD HH:mm:ss:SSS} | {level} | {module}:{function}:{line} {process}:{thread} {message}"
 # 以下日志等级可以调整
 LOG_LEVEL = "DEBUG"
-LOG_HANDLERS = ['servers', 'console'] if DEBUG else ['servers']
 
 import loguru
 logger = loguru.logger
@@ -307,13 +307,6 @@ logger.add(
 LOGGING = {
     'version' : 1,
     'disable_existing_loggers':False,
-    'formatters': {
-        'verbose': {
-            'format': '%(asctime)s %(levelname)s [%(module)s:%(funcName)s:%(lineno)d] [%(process)d:%(thread)d] '
-                      '%(message)s',
-            'style': '%',
-        }
-    },
     'handlers':{
         'servers':{
             'level':'DEBUG',
