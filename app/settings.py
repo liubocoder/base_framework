@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 import sys
+from datetime import timedelta
 from pathlib import Path
 #项目名称（自定义参数）
 PROJECT_NAME = '业务基础代码框架'
@@ -257,39 +258,52 @@ CELERY_TASK_TIME_LIMIT = 100
 CELERY_TIMEZONE = TIME_ZONE
 # 任务路由(进程)
 CELERY_TASK_ROUTES = {
-    #'app.base_data.tasks.*': {'queue': 'data_sync'},
+    'app.api.demo.tasks.*': {'queue': 'data_sync'},
 }
 # 默认任务队列
 CELERY_TASK_DEFAULT_QUEUE = 'celery_default'
 CELERY_TASK_DEFAULT_ROUTING_KEY = 'task_default'
 #导入指定的任务模块
 CELERY_IMPORTS = (
-    #'app.base_data.tasks',
+    'app.api.demo.tasks',
 )
 
 # 定时任务
 CELERY_BEAT_SCHEDULE = {
-    # "omAutoBackup": {
-    #     "task": "app.operation_maintenance.tasks.omBackupAutoCreate",
-    #     'schedule': timedelta(hours=1),
-    # },
-    # "websocketTask": {
-    #     "task": "app.device_manage.tasks.clearWebsocketConnect",
-    #     'schedule': timedelta(minutes=10),
-    # },
+    "demo_task": {
+        "task": "app.api.demo.tasks.demo_task",
+        'schedule': timedelta(seconds=2),
+    },
 }
 
 # 日志相关配置，这里用于学习loguru的使用，将框架的日志导入loguru记录到文件中，因此额外实现了一个handler
-# 由于python log框架和loguru框架在结构上的区别，目前的实现存在一些问题，包括：无法实现多个handler，console的输出未集成loguru
-# 实际使用时可以将Django框架的日志直接用loguru输出，用docker的日志管理进行处理，业务日志用loguru
+# 由于python log框架和loguru框架在结构上的区别，目前的实现存在一些问题，包括：无法实现多个handler
 # 日志文件大小 限制，单位MB，默认50MB
 LOGGING_FILE_MAX_SIZE = 50
 # 日志文件保存时长，单位天
 LOGGING_FILE_MAX_AGE = 30
 LOG_FORMAT="{time:YYYY-MM-DD HH:mm:ss:SSS} | {level} | {module}:{function}:{line} {process}:{thread} {message}"
 # 以下日志等级可以调整
-LOG_LEVEL = "INFO"
+LOG_LEVEL = "DEBUG"
 LOG_HANDLERS = ['servers', 'console'] if DEBUG else ['servers']
+
+import loguru
+logger = loguru.logger
+# 部署模式移除默认的console打印
+if not DEBUG:
+    logger.remove()
+# 添加一个输出到文件的打印
+logger.add(
+    os.path.join(LOG_ROOT, 'webapi_log.log'),
+    retention="%s days" % (LOGGING_FILE_MAX_AGE),
+    encoding="utf-8",
+    rotation="%s MB" % (LOGGING_FILE_MAX_SIZE),
+    compression="zip",
+    delay=False,
+    format=LOG_FORMAT,
+    enqueue=True,
+)
+
 LOGGING = {
     'version' : 1,
     'disable_existing_loggers':False,
@@ -304,38 +318,31 @@ LOGGING = {
         'servers':{
             'level':'DEBUG',
             'class': 'app.pkg.utils.log.handler.InterceptTimedRotatingFileHandler',
-            'name': 'servers',
-            'filename': os.path.join(LOG_ROOT, 'webapi_log.log'),
-        },
-        'console':{
-            'level':'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
+        }
     },
     'root': {
         'level': LOG_LEVEL,
-        'handlers':LOG_HANDLERS,
+        'handlers':['servers'],
     },
      'loggers':{
         'django.db.backends':{
             'level': LOG_LEVEL,
-            'handlers':LOG_HANDLERS,
+            'handlers':['servers'],
             'propagate':False,
         },
         'django.channels.server': {
             'level': "INFO",
-            'handlers':LOG_HANDLERS,
+            'handlers':['servers'],
             'propagate':False,
         },
         'daphne.http_protocol': {
             'level': LOG_LEVEL,
-            'handlers':LOG_HANDLERS,
+            'handlers':['servers'],
             'propagate':False,
         },
         'celery': {
-            'level': LOG_LEVEL,
-            'handlers':LOG_HANDLERS,
+            'level': "WARNING",
+            'handlers':['servers'],
             'propagate':False,
         }
      },

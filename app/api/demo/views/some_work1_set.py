@@ -14,9 +14,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
-import logging
-
 from app.pkg.django.response import CommonResponseSerializer, CommonResponseContent, CommonResponseStatusCode
+from app.settings import logger
 
 
 class SomeWork1Set(ViewSet, viewsets.GenericViewSet, mixins.CreateModelMixin):
@@ -31,7 +30,7 @@ class SomeWork1Set(ViewSet, viewsets.GenericViewSet, mixins.CreateModelMixin):
         responses=CommonResponseSerializer,
     )
     def create(self, request, *args, **kwargs):
-        logging.debug("demo create")
+        logger.debug("demo create")
         ret = CommonResponseContent()
         ret.code = CommonResponseStatusCode.SUCCESS
         return Response(ret.to_dict(), status.HTTP_200_OK)
@@ -46,8 +45,8 @@ class SomeWork1Set(ViewSet, viewsets.GenericViewSet, mixins.CreateModelMixin):
         rdConn: Redis = get_redis_connection()
         k1 = "foo1"
         rdConn.set(k1, "value1", ex=10)
-        logging.debug(rdConn.ttl(k1))
-        logging.debug(rdConn.get(k1))
+        logger.debug(rdConn.ttl(k1))
+        logger.debug(rdConn.get(k1))
         ret = CommonResponseContent()
         ret.code = CommonResponseStatusCode.SUCCESS
         return Response(ret.to_dict(), status.HTTP_200_OK)
