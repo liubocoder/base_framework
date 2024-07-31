@@ -19,28 +19,30 @@ class InterceptTimedRotatingFileHandler(logging.Handler):
     自定义反射时间回滚日志记录器
     缺少命名空间
     """
-    def __init__(self, filename, encoding="utf-8", delay=False):
+    def __init__(self, filename, **kwargs):
         super(InterceptTimedRotatingFileHandler, self).__init__()
-        #print("bind filename: ", filename)
         filename = os.path.abspath(filename)
         # 需要本地用不同的文件名做为不同日志的筛选器
-        self.logger_ = logger.bind(sime=filename)
-        self.logger_.remove()
+        self.name = kwargs.get("name", "")
+        logger.remove()
+        # bind函数用于生成的日志对象 附加额外的信息，结合过滤器区分不同的日志
+        self._logger = logger.bind(name=self.name)
         self.filename = filename
-        self.logger_.add(
+        self._logger.add(
             filename,
+            filter= lambda record: record["extra"].get("name") == self.name,
             retention="%s days" % (LOGGING_FILE_MAX_AGE),
-            encoding=encoding,
+            encoding=kwargs.get("encoding", "utf-8"),
             rotation="%s MB" % (LOGGING_FILE_MAX_SIZE),
             compression="zip",
-            delay=delay,
+            delay=kwargs.get("delay", False),
             format=LOG_FORMAT,
             enqueue=True,
         )
 
     def emit(self, record):
         try:
-            level = self.logger_.level(record.levelname).name
+            level = self._logger.level(record.levelname).name
         except ValueError:
             level = record.levelno
 
@@ -50,6 +52,6 @@ class InterceptTimedRotatingFileHandler(logging.Handler):
             frame = frame.f_back
             depth += 1
 
-        self.logger_.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
+        self._logger.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
 
 

@@ -279,13 +279,16 @@ CELERY_BEAT_SCHEDULE = {
     # },
 }
 
-# 日志相关配置
+# 日志相关配置，这里用于学习loguru的使用，将框架的日志导入loguru记录到文件中，因此额外实现了一个handler
+# 由于python log框架和loguru框架在结构上的区别，目前的实现存在一些问题，包括：无法实现多个handler，console的输出未集成loguru
+# 实际使用时可以将Django框架的日志直接用console输出，用docker的日志管理进行处理，业务日志用loguru
 # 日志文件大小 限制，单位MB，默认50MB
 LOGGING_FILE_MAX_SIZE = 50
 # 日志文件保存时长，单位天
 LOGGING_FILE_MAX_AGE = 7
 LOG_FORMAT="{time:YYYY-MM-DD HH:mm:ss:SSS} | {level} | {module}:{function}:{line} {process}:{thread} {message}"
 # 以下日志等级可以调整
+LOG_LEVEL = "DEBUG"
 LOGGING = {
     'version' : 1,
     'disable_existing_loggers':False,
@@ -302,7 +305,7 @@ LOGGING = {
     'handlers':{
         'servers':{
             'class': 'app.pkg.utils.log.handler.InterceptTimedRotatingFileHandler',
-            #'class': 'logging.StreamHandler',
+            'name': 'servers',
             'filename': os.path.join(LOG_ROOT, 'webapi_log.log'),
             'encoding': 'utf-8',
         },
@@ -334,7 +337,7 @@ LOGGING = {
         }
     },
     'root': {
-        'level':'DEBUG',
+        'level': LOG_LEVEL,
         'handlers':['servers', 'console'],
     }
 }
