@@ -177,7 +177,7 @@ DATABASES = {
 
 REDIS_CACHE_CONF = {
     "host": "127.0.0.1",
-    "port": "6679",
+    "port": "6379",
     #ssl配置
     #"SSL": True,
     #"SSL_CERT_REQS": "required",
