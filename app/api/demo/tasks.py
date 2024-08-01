@@ -22,6 +22,8 @@ from app.settings import logger
 
 
 # 这里使用了bind=True，函数的第一个参数会传入celery.Task对象
+# 其他参数包括：soft_time_limit、time_limit、max_retries等等，参考官方文档
+# https://docs.celeryq.dev/en/stable/index.html
 @shared_task(ignore_result=True, bind=True)
 def demo_task(self: celery.Task):
     logger.debug(f"demo task begin: {self.name}")

@@ -66,6 +66,19 @@ class SomeWork1Set(ViewSet, viewsets.GenericViewSet, mixins.CreateModelMixin):
         from celery.result import AsyncResult
 
         # celery的异步
+        # 注意对比delay apply_async apply的区别
+        # 1. delay 是apply_async的简化版本，不能对任务进行控制
+        # 2. apply_async 可以携带参数进行控制，比如超时时间，自定义id等
+        # 3. apply与前两者最大区别是同步函数，不过返回的参数依然是AsyncResult格式
+        # 4. apply_async与apply对异步函数传参使用args=[]的方式
         t_res: AsyncResult =demo_app_task.delay(1, 2)
         logger.debug(f"task_id={t_res.task_id}, status={t_res.status}")
+        try:
+            val = t_res.get(timeout=10)
+            logger.debug(f"result={val}")
+        except Exception as e:
+            logger.error(e)
+
+        a_res: AsyncResult = demo_app_task.apply(args=[1, 2])
+        logger.debug(f"apply result={a_res.get()}")
         return Response(ret.to_dict(), status.HTTP_200_OK)
