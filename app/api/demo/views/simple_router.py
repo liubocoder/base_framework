@@ -27,15 +27,48 @@ class SimpleRouterViewSet(HandleExcGenericAPIView, ViewSet, viewsets.GenericView
     http_method_names = ['get']
 
     @extend_schema(tags=["示例-路由"], summary="单path", responses=CommonResponseSchema)
-    @action(detail=False, methods=['get'], url_path=r'single/(?P<did>.+)/')
+    @action(detail=False, methods=['get'], url_path=r'single/(?P<did>.+)')
     def url1(self, request, *args, **kwargs):
         ret = CommonResponseContent()
+        rd = kwargs.copy()
+        rd["action"] = self.action
+        ret.data = rd
         logger.debug(kwargs)
         return Response(ret.to_dict())
 
     @extend_schema(tags=["示例-路由"], summary="中间path", responses=CommonResponseSchema)
     @action(detail=False, methods=['get'], url_path=r'(?P<did>.+)/midd')
-    def url1(self, request, *args, **kwargs):
+    def url2(self, request, *args, **kwargs):
         ret = CommonResponseContent()
+        rd = kwargs.copy()
+        rd["action"] = self.action
+        ret.data = rd
+        logger.debug(kwargs)
+        return Response(ret.to_dict())
+
+    @extend_schema(tags=["示例-路由"], summary="path指定", responses=CommonResponseSchema)
+    def url3(self, request, *args, **kwargs):
+        ret = CommonResponseContent()
+        rd = kwargs.copy()
+        rd["action"] = self.action
+        ret.data = rd
+        logger.debug(kwargs)
+        return Response(ret.to_dict())
+
+    @extend_schema(tags=["示例-路由"], summary="多path参数指定", responses=CommonResponseSchema)
+    def url4(self, request, *args, **kwargs):
+        ret = CommonResponseContent()
+        rd = kwargs.copy()
+        rd["action"] = self.action
+        ret.data = rd
+        logger.debug(kwargs)
+        return Response(ret.to_dict())
+
+    @extend_schema(tags=["示例-路由"], summary="re_path", responses=CommonResponseSchema)
+    def url5(self, request, *args, **kwargs):
+        ret = CommonResponseContent()
+        rd = kwargs.copy()
+        rd["action"] = self.action
+        ret.data = rd
         logger.debug(kwargs)
         return Response(ret.to_dict())
