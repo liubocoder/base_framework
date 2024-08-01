@@ -7,8 +7,8 @@ celery.py 使用说明:
 
 """
 
-
-from  __future__ import absolute_import, unicode_literals
+#作为兼容py2，这里不可不导入，整个项目已使用py3
+#from  __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
 

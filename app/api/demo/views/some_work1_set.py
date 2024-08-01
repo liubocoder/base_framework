@@ -6,6 +6,7 @@
 some_work1_set.py 使用说明:
     测试一些业务
 """
+
 from django_redis import get_redis_connection
 from drf_spectacular.utils import extend_schema
 from redis import Redis
@@ -14,6 +15,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
+from app.api.demo.tasks import demo_app_task
 from app.pkg.django.response import CommonResponseSerializer, CommonResponseContent, CommonResponseStatusCode
 from app.settings import logger
 
@@ -49,4 +51,21 @@ class SomeWork1Set(ViewSet, viewsets.GenericViewSet, mixins.CreateModelMixin):
         logger.debug(rdConn.get(k1))
         ret = CommonResponseContent()
         ret.code = CommonResponseStatusCode.SUCCESS
+        return Response(ret.to_dict(), status.HTTP_200_OK)
+
+    @extend_schema(
+        tags=["示例-Celery操作"],
+        summary="Celery测试",
+        description="Celery测试",
+    )
+    @action(detail=False, methods=['get'], url_path='celery-func')
+    def celery_func(self, request, *args, **kwargs):
+        ret = CommonResponseContent()
+        ret.code = CommonResponseStatusCode.SUCCESS
+        logger.debug("celery_func")
+        from celery.result import AsyncResult
+
+        # celery的异步
+        t_res: AsyncResult =demo_app_task.delay(1, 2)
+        logger.debug(f"task_id={t_res.task_id}, status={t_res.status}")
         return Response(ret.to_dict(), status.HTTP_200_OK)
