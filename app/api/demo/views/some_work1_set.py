@@ -10,32 +10,21 @@ some_work1_set.py 使用说明:
 from django_redis import get_redis_connection
 from drf_spectacular.utils import extend_schema
 from redis import Redis
-from rest_framework import mixins, viewsets, status
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from app.api.demo.tasks import demo_app_task
-from app.pkg.django.response import CommonResponseSerializer, CommonResponseContent, CommonResponseStatusCode
+from app.pkg.django.base_view_handler import HandleExcGenericAPIView
+from app.pkg.django.response import CommonResponseContent, CommonResponseStatusCode
 from app.settings import logger
 
 
-class SomeWork1Set(ViewSet, viewsets.GenericViewSet, mixins.CreateModelMixin):
+class SomeWork1Set(HandleExcGenericAPIView, ViewSet, viewsets.GenericViewSet):
     permission_classes = []
     authentication_classes = []
-    http_method_names = ['get', 'post']
-
-    @extend_schema(
-        tags=["示例-CRUD"],
-        summary="功能类1【创建】",
-        description="示例代码",
-        responses=CommonResponseSerializer,
-    )
-    def create(self, request, *args, **kwargs):
-        logger.debug("demo create")
-        ret = CommonResponseContent()
-        ret.code = CommonResponseStatusCode.SUCCESS
-        return Response(ret.to_dict(), status.HTTP_200_OK)
+    http_method_names = ['get']
 
     @extend_schema(
         tags=["示例-Redis操作"],

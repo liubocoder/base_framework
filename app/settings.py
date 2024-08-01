@@ -25,7 +25,7 @@ MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 # 本地配置目录
 CONF_DIR = os.path.join(BASE_DIR, 'conf')
 # 日志目录
-LOG_ROOT = os.path.join(BASE_DIR, 'logs')
+LOGS_DIR = os.path.join(BASE_DIR, 'logs')
 
 # 用于加密密码、会话等，初始化是随机生成的字符串
 SECRET_KEY = 'django-insecure-!^bltzueq+kr#uatj64!p=p=v$)lc%dq#)s9zzolfep%rsyd3m'
@@ -112,8 +112,8 @@ REST_FRAMEWORK = {
     },
 
     # 自定义默认的分页类
-    #'DEFAULT_PAGINATION_CLASS': 'app.pkg.django.XXPagination',
-    #'PAGE_SIZE': 10
+    'DEFAULT_PAGINATION_CLASS': 'app.pkg.django.pagination.LocalTablePagination',
+    'PAGE_SIZE': 10
 }
 
 #drf-spectacular 参数配置
@@ -294,7 +294,7 @@ if not DEBUG:
     logger.remove()
 # 添加一个输出到文件的打印
 logger.add(
-    os.path.join(LOG_ROOT, 'webapi_log.log'),
+    os.path.join(LOGS_DIR, 'webapi_log.log'),
     retention="%s days" % (LOGGING_FILE_MAX_AGE),
     encoding="utf-8",
     rotation="%s MB" % (LOGGING_FILE_MAX_SIZE),
@@ -319,7 +319,7 @@ LOGGING = {
     },
      'loggers':{
         'django.db.backends':{
-            'level': LOG_LEVEL,
+            'level': "WARNING",
             'handlers':['servers'],
             'propagate':False,
         },
@@ -339,4 +339,12 @@ LOGGING = {
             'propagate':False,
         }
      },
+}
+
+
+FILE_UPLOADER = {
+    # 文件上传框架默认上传文件最大 100M
+    "DEF_UPLOAD_FILE_MAX_LEN": 100*1024*1024,
+    # 文件上传框架默认存储目录
+    "DEF_UPLOAD_FILE_DIR": os.path.join(MEDIA_DIR, 'upload_files')
 }
