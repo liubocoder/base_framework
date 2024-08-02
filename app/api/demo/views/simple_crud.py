@@ -19,8 +19,8 @@ from app.pkg.django.base_view_handler import HandleExcGenericAPIView
 from app.pkg.django.response import CommonResponseSerializer, CommonResponseContent, CommonResponseStatusCode
 from app.settings import logger
 
-class DevListFilter(ListFilterBackends):
-    name = QField(paramType=QFieldParamType.STR, description="设备类型")
+class MyDataListFilter(ListFilterBackends):
+    name = QField(paramType=QFieldParamType.STR, description="名称")
     factory = QField(paramType=QFieldParamType.INT, description="厂家")
 
     class Meta:
@@ -36,7 +36,7 @@ class SimpleCrudViewSet(HandleExcGenericAPIView, ViewSet, viewsets.GenericViewSe
     authentication_classes = []
     http_method_names = ['get', 'post', 'put', 'delete']
     lookup_field = "did"
-    filter_backends = [DevListFilter]
+    filter_backends = [MyDataListFilter]
 
     def get_queryset(self):
         # 这里可以做其他的过滤

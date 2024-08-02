@@ -4,7 +4,7 @@
 # Created By     : liubo
 """
 urls.py 使用说明:
-    路由路径管理
+    基础路由路径管理
 """
 from django.urls import path, include, re_path
 from rest_framework import routers

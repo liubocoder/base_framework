@@ -4,7 +4,7 @@
 # Create By      : liubo
 """
 base_file_serializer.py 使用说明:
-
+    简单文件上传的序列化类
 """
 
 import datetime
