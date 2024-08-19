@@ -13,7 +13,7 @@ model关联关系、事务等  ok
 自定义用户          ok
 自定义权限          ok
 自定义session管理
-websocket示例
+websocket示例      ok
 自定义channel tcp服务器
 分表方案？
 celery-beat调度器？

@@ -23,3 +23,20 @@ class JwtAuthentication(BaseAuthentication):
         logger.debug(f"my session: {ss.items()}")
         # request 从中获取token，自定义session
         return User("zs", "dd"), {"mysession": "aa"}
+
+
+class WebsocketJwtAuthMiddleware:
+    def __init__(self, inner):
+        self.inner = inner
+
+    async def __call__(self, scope, receive, send):
+        """
+        参数为asgi的标准
+        """
+        # 处理ws的session
+        session = scope.get("session")
+        logger.debug(f"asgi session: {session}")
+        # 注意处理数据库的问题 同步异步转换 @database_sync_to_async
+        return await self.inner(scope, receive, send)
+
+
