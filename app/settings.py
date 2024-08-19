@@ -307,22 +307,6 @@ LOG_FORMAT="{time:YYYY-MM-DD HH:mm:ss:SSS} | {level} | {module}:{function}:{line
 # 以下日志等级可以调整
 LOG_LEVEL = "DEBUG"
 
-import loguru
-logger = loguru.logger
-# 部署模式移除默认的console打印
-if not DEBUG:
-    logger.remove()
-# 添加一个输出到文件的打印
-logger.add(
-    os.path.join(LOGS_DIR, 'webapi_log.log'),
-    retention="%s days" % (LOGGING_FILE_MAX_AGE),
-    encoding="utf-8",
-    rotation="%s MB" % (LOGGING_FILE_MAX_SIZE),
-    compression="zip",
-    delay=False,
-    format=LOG_FORMAT,
-    enqueue=True,
-)
 
 LOGGING = {
     'version' : 1,
@@ -361,6 +345,25 @@ LOGGING = {
      },
 }
 
+
+#=============================以下非django框架，属于自定义配置属性==========================#
+
+import loguru
+logger = loguru.logger
+# 部署模式移除默认的console打印
+if not DEBUG:
+    logger.remove()
+# 添加一个输出到文件的打印
+logger.add(
+    os.path.join(LOGS_DIR, 'webapi_log.log'),
+    retention="%s days" % (LOGGING_FILE_MAX_AGE),
+    encoding="utf-8",
+    rotation="%s MB" % (LOGGING_FILE_MAX_SIZE),
+    compression="zip",
+    delay=False,
+    format=LOG_FORMAT,
+    enqueue=True,
+)
 
 FILE_UPLOADER = {
     # 文件上传框架默认上传文件最大 100M

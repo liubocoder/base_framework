@@ -1,9 +1,16 @@
 import uuid
 
+from django.apps import AppConfig
 from django.db import models
+from django.db.models.signals import post_migrate
+from django.dispatch import receiver
 
-
-# Create your models here.
+@receiver(post_migrate)
+def create_def_val(sender: AppConfig, **kwargs):
+    if sender.name != 'app.api.demo':
+        return
+    #处理数据迁移
+    print(sender.name, sender.models, sender.verbose_name, sender.path)
 
 class MyDemoData(models.Model):
     did = models.CharField(primary_key=True, max_length=64, default=uuid.uuid4, verbose_name="主键id")
