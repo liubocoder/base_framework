@@ -1,6 +1,8 @@
+import loguru
+from django.db import transaction
 from django.test import TestCase
 
-from app.api.demo.models import MyJsonData
+from app.api.demo.models import MyJsonData, MyDemoData, MyFore
 
 """
 python manage.py test 包名.类名.函数名
@@ -10,7 +12,48 @@ python manage.py test app.api.demo.MyUnitTest.test1 --keepdb
 """
 
 class MyUnitTest(TestCase):
-    def test1(self):
+    def testDbAtomic(self):
+        #方案1使用注解  using参数指定数据库
+        #@transaction.atomic()
+
+        #方案2使用with transaction.atomic()
+
+        #方案3使用try except
+        sid = transaction.savepoint()
+        try:
+            mdd = MyDemoData()
+            mdd.name = "n1"
+            mdd.save()
+            dbMdd = MyDemoData.objects.get(did=mdd.did)
+            mf = MyFore()
+            mf.name = "mf1"
+            mf.demoDid = dbMdd
+            mf.save()
+            # 产生异常
+            # raise Exception("xx")
+            transaction.savepoint_commit(sid)
+        except Exception as e:
+            transaction.savepoint_rollback(sid)
+
+        print(f"MyDemoData 数据量： {MyDemoData.objects.count()}")
+        print(f"MyFore 数据量： {MyFore.objects.count()}")
+
+
+    def testDbRel(self):
+        # 测试简单的关联关系
+        mdd = MyDemoData()
+        mdd.name = "n1"
+        mdd.save()
+        dbMdd = MyDemoData.objects.get(did=mdd.did)
+        mf = MyFore()
+        mf.name = "mf1"
+        mf.demoDid = dbMdd
+        mf.save()
+        print(mf)
+
+
+    def testDbJson(self):
+        # 测试json格式的数据
         md = MyJsonData()
         md.name = "zs"
         md.content = {

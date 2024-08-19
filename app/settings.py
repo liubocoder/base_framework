@@ -167,6 +167,7 @@ USE_TZ = False
 
 STATIC_URL = 'static/'
 
+# 多数据库管理，自定义路由类
 DATABASE_ROUTERS = ['app.db_router.router.DbRouter']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

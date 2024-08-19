@@ -7,9 +7,9 @@
 7. celery配置     ok
 8. 各种drf 接口示例   ok
 9. 工具类          ok
-多app的数据库路由
-model关联关系、事务等
-单元测试
+多app的数据库路由   ok
+model关联关系、事务等  ok
+单元测试            ok
 自定义用户
 自定义权限
 自定义session管理

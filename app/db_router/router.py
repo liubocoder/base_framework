@@ -9,26 +9,21 @@ router.py 使用说明:
     2. 读写分离
     ...
 """
-import loguru
 
 
 class DbRouter(object):
 
     def db_for_read(self, model, **hints):
-        loguru.logger.debug(model._meta.app_label)
         if model._meta.app_label == 'myapp':
             return 'libdb'
         return 'default'
 
     def db_for_write(self, model, **hints):
-        loguru.logger.debug(model._meta.app_label)
         if model._meta.app_label == 'myapp':
             return 'libdb'
         return 'default'
 
     def allow_relation(self, obj1, obj2, **hints):
-        loguru.logger.debug(obj1._meta.app_label)
-        loguru.logger.debug(obj2._meta.app_label)
         #TODO 这里示例项目仅简单处理
         if obj1._meta.app_label == obj2._meta.app_label:
             return True
@@ -39,7 +34,6 @@ class DbRouter(object):
         db 数据库名称
         app_label 应用简称
         """
-        loguru.logger.debug(f"{db}, {app_label}, {model_name}")
         if db == 'libdb':
             return app_label == 'myapp'
         if app_label == 'myapp':
