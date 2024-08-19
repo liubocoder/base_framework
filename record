@@ -12,9 +12,9 @@ model关联关系、事务等  ok
 单元测试            ok
 自定义用户          ok
 自定义权限          ok
-自定义session管理
+自定义session管理？
 websocket示例      ok
-自定义channel tcp服务器
+自定义channel tcp服务器   ok
 分表方案？
 celery-beat调度器？
 https://blog.csdn.net/qq_36441027/article/details/123851915
@@ -26,7 +26,9 @@ supervisord daphne
 supervisord nginx
 supervisord redis
 supervisord mysql
-
+https://blog.csdn.net/weixin_44424086/article/details/120135428
+fastcgi 进程的管理 fcgi-program
+https://www.cnblogs.com/-lee/p/12650298.html
 pyInstaller 打包可执行文件
 
 
