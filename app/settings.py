@@ -176,6 +176,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(LOC_DB_DIR, 'db.sqlite3'),
+    },
+    'libdb': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(LOC_DB_DIR, 'libdb.sqlite3'),
     }
 }
 #DB-mysql
@@ -334,7 +338,7 @@ LOGGING = {
     },
      'loggers':{
         'django.db.backends':{
-            'level': "DEBUG",
+            'level': "WARNING",
             'handlers':['servers'],
             'propagate':False,
         },
