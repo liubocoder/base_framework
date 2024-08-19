@@ -11,6 +11,8 @@ urlpatterns = []
 urlpatterns += router.urls
 
 from app.api.demo import urls as demo
+from app.api.myapp import urls as myapp
 
 urlpatterns += demo.urlpatterns
+urlpatterns += myapp.urlpatterns
 

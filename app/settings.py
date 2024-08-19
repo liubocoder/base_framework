@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 
     #本地应用
     'app.api.demo',
+    'app.api.myapp'
 ]
 
 MIDDLEWARE = [
@@ -165,6 +166,8 @@ USE_L10N = True
 USE_TZ = False
 
 STATIC_URL = 'static/'
+
+DATABASE_ROUTERS = ['app.db_router.router.DbRouter']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
