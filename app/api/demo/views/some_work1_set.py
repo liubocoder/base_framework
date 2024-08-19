@@ -17,7 +17,7 @@ from rest_framework.viewsets import ViewSet
 
 from app.api.demo.tasks import demo_app_task
 from app.pkg.django.base_view_handler import HandleExcGenericAPIView
-from app.pkg.django.response import CommonResponseContent, CommonResponseStatusCode
+from app.pkg.django.response import CommonResponseContent, CommonResponseStatusCode, CommonResponseSerializer
 from app.settings import logger
 
 
@@ -25,6 +25,9 @@ class SomeWork1Set(HandleExcGenericAPIView, ViewSet, viewsets.GenericViewSet):
     permission_classes = []
     authentication_classes = []
     http_method_names = ['get']
+
+    def get_serializer_class(self):
+        return CommonResponseSerializer
 
     @extend_schema(
         tags=["示例-Redis操作"],

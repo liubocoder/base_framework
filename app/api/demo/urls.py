@@ -22,7 +22,7 @@ urlpatterns = [
     # 上古写法，不再使用
     # url()
 
-    # 注意如下写的方式优先级的考虑
+    # 注意如下写的方式优先级的考虑，未处理冲突问题，实际项目根据需求调整
     path("demo/", include(demo_router.urls)),
     path("demo/<str:did>/", SimpleRouterViewSet.as_view({"get": "url3"})),
     path("demo/<str:did>/<str:name>/", SimpleRouterViewSet.as_view({"get": "url4"})),

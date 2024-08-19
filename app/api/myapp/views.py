@@ -29,20 +29,14 @@ class MyAppViewSet(HandleExcGenericAPIView, ViewSet, viewsets.GenericViewSet,
                         mixins.DestroyModelMixin):
     permission_classes = []
     authentication_classes = []
+    serializer_class = MyBookSerializer
     http_method_names = ['get', 'post', 'put', 'delete']
-    lookup_field = "did"
+    lookup_field = "id"
     filter_backends = [MyDataListFilter]
 
     def get_queryset(self):
         # 这里可以做其他的过滤
         return Book.objects.all()
-
-    def get_serializer_class(self):
-        if self.action == 'list' or self.action == 'retrieve':
-            return MyBookSerializer
-        if self.action == 'create' or self.action == 'update':
-            return MyBookSerializer
-        return CommonResponseSerializer
 
     @extend_schema(
         tags=["MyApp-CRUD"],
