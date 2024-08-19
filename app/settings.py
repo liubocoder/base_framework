@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'app.api.auth.middleware.my_middleware.MyMiddleware'
 ]
 
 # 路由的入口
@@ -97,10 +98,12 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
         # 'rest_framework.permissions.IsAuthenticated',
         # 自定义的权限
+        'app.api.auth.my_permission.MyPermission'
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     'DEFAULT_AUTHENTICATION_CLASSES': [
         #自定义token
+        'app.api.auth.jwt.JwtAuthentication'
     ],
 
     # 限流 TODO 导致swagger异常
@@ -345,6 +348,9 @@ LOGGING = {
      },
 }
 
+# session的设置
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
 
 #=============================以下非django框架，属于自定义配置属性==========================#
 

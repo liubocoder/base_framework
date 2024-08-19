@@ -33,8 +33,6 @@ class SimpleCrudViewSet(HandleExcGenericAPIView, ViewSet, viewsets.GenericViewSe
                         mixins.ListModelMixin,
                         mixins.UpdateModelMixin,
                         mixins.DestroyModelMixin):
-    permission_classes = []
-    authentication_classes = []
     http_method_names = ['get', 'post', 'put', 'delete']
     lookup_field = "did"
     filter_backends = [MyDataListFilter]

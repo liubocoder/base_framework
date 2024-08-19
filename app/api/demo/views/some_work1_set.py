@@ -6,7 +6,6 @@
 some_work1_set.py 使用说明:
     测试一些业务
 """
-
 from django_redis import get_redis_connection
 from drf_spectacular.utils import extend_schema
 from redis import Redis
@@ -22,8 +21,6 @@ from app.settings import logger
 
 
 class SomeWork1Set(HandleExcGenericAPIView, ViewSet, viewsets.GenericViewSet):
-    permission_classes = []
-    authentication_classes = []
     http_method_names = ['get']
 
     def get_serializer_class(self):
@@ -73,4 +70,39 @@ class SomeWork1Set(HandleExcGenericAPIView, ViewSet, viewsets.GenericViewSet):
 
         a_res: AsyncResult = demo_app_task.apply(args=[1, 2])
         logger.debug(f"apply result={a_res.get()}")
+        return Response(ret.to_dict(), status.HTTP_200_OK)
+
+    @extend_schema(
+        tags=["示例-中间件"],
+        summary="无权限",
+        description="测试无权限",
+    )
+    @action(detail=False, methods=['get'], url_path='nopermission')
+    def nopermission(self, request, *args, **kwargs):
+        ret = CommonResponseContent()
+        ret.code = CommonResponseStatusCode.SUCCESS
+        return Response(ret.to_dict(), status.HTTP_200_OK)
+
+    @extend_schema(
+        tags=["示例-中间件"],
+        summary="有权限",
+        description="测试有权限",
+    )
+    @action(detail=False, methods=['get'], url_path='permission')
+    def permission(self, request, *args, **kwargs):
+        ret = CommonResponseContent()
+        ret.code = CommonResponseStatusCode.SUCCESS
+        return Response(ret.to_dict(), status.HTTP_200_OK)
+
+    @extend_schema(
+        tags=["示例-中间件"],
+        summary="认证",
+        description="测试认证",
+    )
+    @action(detail=False, methods=['get'], url_path='auth')
+    def auth(self, request, *args, **kwargs):
+        request.session["jwt"] = "myJwtAuthed"
+        request.session["mydata"] = "abcd"
+        ret = CommonResponseContent()
+        ret.code = CommonResponseStatusCode.SUCCESS
         return Response(ret.to_dict(), status.HTTP_200_OK)

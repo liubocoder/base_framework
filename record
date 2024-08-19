@@ -10,8 +10,8 @@
 多app的数据库路由   ok
 model关联关系、事务等  ok
 单元测试            ok
-自定义用户
-自定义权限
+自定义用户          ok
+自定义权限          ok
 自定义session管理
 websocket示例
 自定义channel tcp服务器

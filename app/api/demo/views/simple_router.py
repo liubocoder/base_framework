@@ -22,7 +22,6 @@ from app.settings import logger
 
 class SimpleRouterViewSet(HandleExcGenericAPIView, ViewSet, viewsets.GenericViewSet):
 
-    permission_classes = []
     authentication_classes = []
     http_method_names = ['get']
 
