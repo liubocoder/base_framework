@@ -371,6 +371,11 @@ logger.add(
     enqueue=True,
 )
 
+#这里结合dbrouter自定义应用于数据库的对应关系，未启用
+DATABASE_APPS_MAPPING = {
+    #'myapp': 'libdb'
+}
+
 FILE_UPLOADER = {
     # 文件上传框架默认上传文件最大 100M
     "DEF_UPLOAD_FILE_MAX_LEN": 100*1024*1024,
