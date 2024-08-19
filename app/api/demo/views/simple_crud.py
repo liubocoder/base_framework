@@ -6,7 +6,6 @@
 simple_crud.py 使用说明:
 
 """
-
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
@@ -19,12 +18,14 @@ from app.pkg.django.base_view_handler import HandleExcGenericAPIView
 from app.pkg.django.response import CommonResponseSerializer, CommonResponseContent, CommonResponseStatusCode
 from app.settings import logger
 
+
 class MyDataListFilter(ListFilterBackends):
     name = QField(paramType=QFieldParamType.STR, description="名称")
     factory = QField(paramType=QFieldParamType.INT, description="厂家")
 
     class Meta:
-        order_by = ('-ctime', )
+        order_by = ('-ctime',)
+
 
 class SimpleCrudViewSet(HandleExcGenericAPIView, ViewSet, viewsets.GenericViewSet,
                         mixins.CreateModelMixin,
@@ -117,7 +118,3 @@ class SimpleCrudViewSet(HandleExcGenericAPIView, ViewSet, viewsets.GenericViewSe
     )
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
-
-
-
-

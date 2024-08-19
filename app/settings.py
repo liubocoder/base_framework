@@ -168,13 +168,25 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+#DB-sqlite3
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(LOC_DB_DIR, 'db.sqlite3'),
     }
 }
+#DB-mysql
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'base_fmw',
+#         'USER': 'root',
+#         'PASSWORD': '123456',
+#         'HOST': '192.168.2.12',
+#         'PORT': '3306',
+#         #'TEST': {'NAME': 'base_fmw',}
+#     }
+# }
 
 REDIS_CACHE_CONF = {
     "host": "127.0.0.1",
@@ -319,7 +331,7 @@ LOGGING = {
     },
      'loggers':{
         'django.db.backends':{
-            'level': "WARNING",
+            'level': "DEBUG",
             'handlers':['servers'],
             'propagate':False,
         },

@@ -1,0 +1,32 @@
+1. django基础配置  ok
+2. sqlite配置     ok
+3. redis连接      ok
+4. module创建: app.api.demo        ok
+5. 自定义django指令 demo.showm      ok
+6. 日志配置        ok
+7. celery配置     ok
+8. 各种drf 接口示例   ok
+9. 工具类          ok
+多app的数据库路由
+model关联关系、事务等
+单元测试
+自定义用户
+自定义权限
+自定义session管理
+websocket示例
+自定义channel tcp服务器
+分表方案？
+celery-beat调度器？
+https://blog.csdn.net/qq_36441027/article/details/123851915
+
+部署
+migration 管理、钩子事件
+supervisord celery
+supervisord daphne
+supervisord nginx
+supervisord redis
+supervisord mysql
+
+pyInstaller 打包可执行文件
+
+
