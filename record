@@ -20,15 +20,32 @@ celery-beat调度器？
 https://blog.csdn.net/qq_36441027/article/details/123851915
 
 部署
-migration 管理、钩子事件
-supervisord celery
-supervisord daphne
+migration 管理、钩子事件  ok
+supervisord celery  ok
+supervisord daphne  ok
 supervisord nginx
 supervisord redis
+    这里是二进制的方式部署，因此需要获取源码，编译安装
+    apt install -y make gcc wget
+    VERSION=7.0.9
+    wget https://download.redis.io/releases/redis-$VERSION.tar.gz
+    tar zxvf redis-$VERSION.tar.gz
+    cd redis-$VERSION
+    make
+    配置文件修改点：
+        bind
+        port
+        pidfile
+        logfile
+
+
+
 supervisord mysql
 https://blog.csdn.net/weixin_44424086/article/details/120135428
+
 fastcgi 进程的管理 fcgi-program
 https://www.cnblogs.com/-lee/p/12650298.html
+
 pyInstaller 打包可执行文件
 
 
