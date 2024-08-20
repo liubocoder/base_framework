@@ -11,5 +11,5 @@ from django.urls import path
 from app.websocket.ws import WsConsumer
 
 ws_urlpatterns = [
-    path("basefw/ws/v1/web", WsConsumer.as_asgi())
+    path("basefw/ws/v1/web/", WsConsumer.as_asgi())
 ]

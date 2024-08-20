@@ -19,7 +19,7 @@ class WsConsumer(AsyncJsonWebsocketConsumer):
         if False:
             self.close()
             return
-        await super().connect()
+        await self.accept()
 
     async def disconnect(self, code):
         logger.debug("ws discon")

@@ -1,0 +1,10 @@
+依赖 PCRE、openssl、gzip、gcc等库
+    wget  http://nginx.org/download/nginx-1.16.1.tar.gz
+    tar -zxf nginx-1.16.1.tar.gz
+    cd nginx-1.16.1
+    ./configure
+    make  && make install
+
+
+nginx 目录结构 配置 优化等
+https://www.cnblogs.com/liang-io/p/9340335.html

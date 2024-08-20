@@ -1,0 +1,15 @@
+这里是二进制的方式部署，因此需要获取源码，编译安装
+apt install -y make gcc wget
+VERSION=7.0.9
+wget https://download.redis.io/releases/redis-$VERSION.tar.gz
+tar zxvf redis-$VERSION.tar.gz
+cd redis-$VERSION
+make
+配置文件可修改点：
+    bind
+    port
+    pidfile
+    logfile
+    protected-mode
+    dir
+    dbfilename
