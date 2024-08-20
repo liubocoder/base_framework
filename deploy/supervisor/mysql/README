@@ -1,0 +1,33 @@
+# mysql二进制下载地址
+# https://downloads.mysql.com/archives/community/
+wget https://cdn.mysql.com/archives/mysql-8.0/mysql-8.0.37-linux-glibc2.28-x86_64.tar.xz
+tar -xf mysql-8.0.37-linux-glibc2.28-x86_64.tar.xz
+
+# 添加mysql用户主要是在主机上运行mysql的安全考虑，如果是docker部署，可以直接使用root，不用单独创建用户
+useradd -s /sbin/nologin mysql -M
+
+mkdir -p /home/mysql/mysql
+mkdir -p /home/mysql/data
+mkdir -p /home/mysql/logs
+cp -rf ./mysql-8.0.37-linux-glibc2.28-x86_64/* /home/mysql/mysql/
+# 这里需要注意mysqld以及相关库和插件等文件的权限是否满足要求
+chown -Rf mysql.mysql /home/mysql/mysql
+chown -Rf mysql.mysql /home/mysql/data
+chown -Rf mysql.mysql /home/mysql/logs
+
+cd进入mysql相关的bin目录
+# 初始化mysql
+./mysqld --defaults-file=/home/mysql/my.conf --initialize-insecure
+# 默认的root用户没有密码只能127登录，初始一个密码123456
+./mysql -uroot -S /tmp/mysql.sock --connect-expired-password  -e "alter user 'root'@'localhost' identified by '123456';"
+# 运行mysql
+./mysqld --defaults-file=/home/mysql/my.conf
+
+
+参考资料：
+msyql一键部署脚本
+https://cloud.tencent.com/developer/article/1779043
+mysql二进制安装
+https://blog.csdn.net/qq_22903531/article/details/135623446
+mysql编译过程 可参考博客
+https://blog.csdn.net/qq_45111959/article/details/124571756

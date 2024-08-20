@@ -3,8 +3,8 @@
     tar -zxf nginx-1.16.1.tar.gz
     cd nginx-1.16.1
     ./configure
-    make  && make install
-
+    make
+nginx的可执行文件拷贝到部署的路径
 
 nginx 目录结构 配置 优化等
 https://www.cnblogs.com/liang-io/p/9340335.html

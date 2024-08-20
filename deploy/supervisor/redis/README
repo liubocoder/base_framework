@@ -5,6 +5,7 @@ wget https://download.redis.io/releases/redis-$VERSION.tar.gz
 tar zxvf redis-$VERSION.tar.gz
 cd redis-$VERSION
 make
+redis的可执行文件拷贝到部署的路径
 配置文件可修改点：
     bind
     port
