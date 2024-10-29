@@ -122,6 +122,8 @@ class QListField(QField):
     """
     def __init__(self, paramType: QFieldParamType, name=None, required=False, description="",
                  default=None, model_name=None, lookup_expr=None):
+        if lookup_expr is None:
+            lookup_expr = "in"
         assert lookup_expr in _ListCompareMarks, f"无效的lookup_expr参数: {lookup_expr}"
         super().__init__(paramType, name, required, description, None, model_name, lookup_expr)
 
@@ -173,6 +175,10 @@ class FilterMetaclass(type):
 
     @classmethod
     def get_declared_filters(cls, bases, attrs):
+        collects = {}
+        for it in bases:
+            if hasattr(it, "_declared_filters"):
+                collects.update(it._declared_filters)
         fs = [
             (filter_name, attrs.pop(filter_name))
             for filter_name, obj in list(attrs.items())
@@ -183,7 +189,8 @@ class FilterMetaclass(type):
             if getattr(f, "name", None) is None:
                 f.name = filter_name
 
-        return OrderedDict(fs)
+        collects.update(fs)
+        return OrderedDict(collects)
 
 
 class ListFilterBackends(filters.BaseFilterBackend, metaclass=FilterMetaclass):
