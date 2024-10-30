@@ -176,28 +176,28 @@ DATABASE_ROUTERS = ['app.db_router.router.DbRouter']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #DB-sqlite3
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(LOC_DB_DIR, 'db.sqlite3'),
-    },
-    'libdb': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(LOC_DB_DIR, 'libdb.sqlite3'),
-    }
-}
-#DB-mysql
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'base_fmw',
-#         'USER': 'root',
-#         'PASSWORD': '123456',
-#         'HOST': '192.168.2.12',
-#         'PORT': '3306',
-#         #'TEST': {'NAME': 'base_fmw',}
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(LOC_DB_DIR, 'db.sqlite3'),
+#     },
+#     'libdb': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(LOC_DB_DIR, 'libdb.sqlite3'),
 #     }
 # }
+#DB-mysql
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'base_fmw',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': '192.168.2.12',
+        'PORT': '3306',
+        #'TEST': {'NAME': 'base_fmw',}
+    }
+}
 
 REDIS_CACHE_CONF = {
     "host": "127.0.0.1",
@@ -362,6 +362,7 @@ if not DEBUG:
 # 添加一个输出到文件的打印
 logger.add(
     os.path.join(LOGS_DIR, 'webapi_log.log'),
+    level=LOG_LEVEL,
     retention="%s days" % (LOGGING_FILE_MAX_AGE),
     encoding="utf-8",
     rotation="%s MB" % (LOGGING_FILE_MAX_SIZE),
