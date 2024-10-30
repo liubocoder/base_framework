@@ -36,3 +36,16 @@ class MyFore(models.Model):
 class MyJsonData(models.Model):
     name = models.CharField(max_length=64, verbose_name="名称信息")
     content = models.JSONField(verbose_name="json数据")
+
+class Author(models.Model):
+    id = models.CharField(max_length=64, primary_key=True)
+    name = models.CharField(verbose_name="作者名称", max_length=64)
+    age = models.IntegerField()
+    ctime = models.DateTimeField(auto_now_add=True)
+
+class Book(models.Model):
+    id = models.CharField(max_length=64, primary_key=True)
+    name = models.CharField(verbose_name="书籍名称", max_length=64)
+    price = models.IntegerField()
+    author = models.ManyToManyField(Author)
+    ctime = models.DateTimeField(auto_now_add=True)

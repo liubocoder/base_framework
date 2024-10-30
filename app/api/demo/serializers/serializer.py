@@ -14,6 +14,7 @@ from rest_framework import serializers
 
 from app.api.demo.models import MyDemoData
 from app.pkg.django.base_request_serializer import BaseRequestSerializerMixin
+from app.pkg.schema_parser import jsonToSchema
 
 
 class MyDemoChildData(serializers.Serializer):
@@ -44,17 +45,51 @@ class MyDemoDataRequestSerializer(serializers.Serializer, BaseRequestSerializerM
     class Meta:
         fields = "__all__"
 
-class MyDemoDataSerializer(serializers.ModelSerializer):
-    myJson = serializers.SerializerMethodField(label="json数据")
 
-    @extend_schema_field(OpenApiTypes.ANY)
-    def get_myJson(self, obj):
-        td = obj.myTextData
-        if td:
-            return json.loads(td)
-        return {}
+class MyJsonField(serializers.DictField):
+    _spectacular_annotation = None
+    def __init__(self, **kwargs):
+        js = kwargs.pop("jsonSchema", None)
+        if js:
+            self._spectacular_annotation = {"field": jsonToSchema(js)}
+        super().__init__(**kwargs)
+
+    def to_representation(self, value):
+        return json.loads(value) if value else None
+
+class MyMethodField(serializers.SerializerMethodField):
+    _spectacular_annotation = None
+
+    def __init__(self, **kwargs):
+        js = kwargs.pop("jsonSchema", None)
+        if js:
+            self._spectacular_annotation = {"field": jsonToSchema(js)}
+        super().__init__(**kwargs)
+
+class MyDemoDataSerializer(serializers.ModelSerializer):
+    field1 = """
+        {
+            "a": 1,  #测试数据
+            "aa": [1,2,3], #测试数组
+            "obj": {
+                "b": "dddd" # 测试对象
+            },
+            "objArr": [ #测试对象数组
+                {
+                    "c": "ccccc" # 测试数据
+                }
+            ]
+        }
+        """
+    myTextData = MyJsonField(label="测试json", jsonSchema=field1)
+    myMethod = MyMethodField(label="测试method", jsonSchema=field1)
+
+    def get_myMethod(self, obj):
+        return {
+            "aa": 11
+        }
 
     class Meta:
         model = MyDemoData
-        #fields = '__all__'
-        exclude = ('myTextData', )
+        fields = '__all__'
+        #exclude = ('myTextData', )

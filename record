@@ -16,6 +16,7 @@ model关联关系、事务等  ok
 websocket示例      ok
 自定义channel tcp服务器   ok
 分表方案？
+template模板？
 celery-beat调度器？
 https://blog.csdn.net/qq_36441027/article/details/123851915
 
@@ -23,14 +24,9 @@ https://blog.csdn.net/qq_36441027/article/details/123851915
 migration 管理、钩子事件  ok
 supervisord celery  ok
 supervisord daphne  ok
-supervisord nginx
-
-
+supervisord nginx   ok
 supervisord redis ok
-https://blog.csdn.net/m0_51964671/article/details/135575166
-
-supervisord mysql
-https://blog.csdn.net/weixin_44424086/article/details/120135428
+supervisord mysql   ok
 
 fastcgi 进程的管理 fcgi-program
 https://www.cnblogs.com/-lee/p/12650298.html

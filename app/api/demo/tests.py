@@ -1,8 +1,10 @@
+import uuid
+
 import loguru
 from django.db import transaction
 from django.test import TestCase
 
-from app.api.demo.models import MyJsonData, MyDemoData, MyFore
+from app.api.demo.models import MyJsonData, MyDemoData, MyFore, Author, Book
 
 """
 python manage.py test 包名.类名.函数名
@@ -50,6 +52,25 @@ class MyUnitTest(TestCase):
         mf.demoDid = dbMdd
         mf.save()
         print(mf)
+
+    def testDbPre(self):
+        # prefetch_related
+        print("-------------")
+        aid = uuid.uuid4()
+        at = {"name": "zs", "age": 20, "id": aid}
+        ar = Author(**at)
+        ar.save()
+
+        bid = uuid.uuid4()
+        bk = {"name": "jyud", "price": 110, "id": bid, "author": ar}
+        Book(**bk).save()
+
+        bobj = Book.objects.all()
+
+        print(bobj.author)
+
+        print("--------------")
+
 
 
     def testDbJson(self):
