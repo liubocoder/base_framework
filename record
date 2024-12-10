@@ -15,10 +15,17 @@ model关联关系、事务等  ok
 自定义session管理？
 websocket示例      ok
 自定义channel tcp服务器   ok
-分表方案？
+分表方案？ 参考以下方案，实现日期分库
+https://github.com/iTraceur/django_table_sharding_example.git
 template模板？
 celery-beat调度器？
 https://blog.csdn.net/qq_36441027/article/details/123851915
+
+swagger拦截
+drf_spectacular
+    redoc.html
+    swagger_ui.html
+    swagger_ui.js  # 修改这里的js代码完成拦截，可以用于登录token的注入等
 
 部署
 migration 管理、钩子事件  ok
@@ -31,6 +38,6 @@ supervisord mysql   ok
 fastcgi 进程的管理 fcgi-program
 https://www.cnblogs.com/-lee/p/12650298.html
 
-pyInstaller 打包可执行文件
+pyInstaller 打包可执行文件 ?
 
 
